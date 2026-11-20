@@ -1,23 +1,58 @@
+
 #include <stdio.h>
 
-// Definição dos estados do semáforo
 typedef enum {
     VERMELHO,
     VERDE,
     AMARELO
 } Estado;
 
-// Estrutura do semáforo
 typedef struct {
     Estado estado;
+    unsigned int tempo_decorrido;
 } Semaforo;
 
-// Inicializa o semáforo
-void inicializar(Semaforo *s) {
-    s->estado = VERMELHO;
+// Retorna a duração de cada estado.
+unsigned int obterTempoEstado(Estado estado) {
+    switch (estado) {
+        case VERMELHO:
+            return 30;
+
+        case VERDE:
+            return 25;
+
+        case AMARELO:
+            return 5;
+
+        default:
+            return 0;
+    }
 }
 
-// Avança para o próximo estado
+// Retorna o nome do estado atual.
+const char* obterNomeEstado(Estado estado) {
+    switch (estado) {
+        case VERMELHO:
+            return "VERMELHO";
+
+        case VERDE:
+            return "VERDE";
+
+        case AMARELO:
+            return "AMARELO";
+
+        default:
+            return "DESCONHECIDO";
+    }
+}
+
+// Inicializa o semáforo no estado vermelho.
+void inicializar(Semaforo *s) {
+    s->estado = VERMELHO;
+    s->tempo_decorrido = 0;
+}
+
+// Avança para o próximo estado.
 void avancar(Semaforo *s) {
     switch (s->estado) {
         case VERMELHO:
@@ -34,19 +69,12 @@ void avancar(Semaforo *s) {
     }
 }
 
-// Retorna o nome do estado atual
-const char *obterEstado(Semaforo *s) {
-    switch (s->estado) {
-        case VERMELHO:
-            return "Vermelho";
+// Atualiza o tempo e realiza as transições necessárias.
+void atualizar(Semaforo *s, unsigned int segundos) {
+    s->tempo_decorrido += segundos;
 
-        case VERDE:
-            return "Verde";
-
-        case AMARELO:
-            return "Amarelo";
-
-        default:
-            return "Estado inválido";
+    while (s->tempo_decorrido >= obterTempoEstado(s->estado)) {
+        s->tempo_decorrido -= obterTempoEstado(s->estado);
+        avancar(s);
     }
 }
