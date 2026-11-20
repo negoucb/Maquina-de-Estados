@@ -1,17 +1,16 @@
 
 #include <stdio.h>
 
-typedef enum {
+typedef enum Estado {
     VERMELHO,
     VERDE,
     AMARELO
 } Estado;
 
-typedef struct {
+typedef struct Semaforo {
     Estado estado;
     unsigned int tempo_decorrido;
 } Semaforo;
-
 // Retorna a duração de cada estado.
 unsigned int obterTempoEstado(Estado estado) {
     switch (estado) {
