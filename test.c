@@ -1,49 +1,55 @@
+
 #include <stdio.h>
 #include <assert.h>
-#include "semaforo.c"
 
-void testarEstadoInicial() {
-    Semaforo s;
-    inicializar(&s);
+// Declarações compartilhadas com semaforo.c.
+typedef enum {
+    VERMELHO,
+    VERDE,
+    AMARELO
+} Estado;
 
-    assert(s.estado == VERMELHO);
-    printf("Teste de estado inicial: OK\n");
-}
+typedef struct {
+    Estado estado;
+    unsigned int tempo_decorrido;
+} Semaforo;
 
-void testarTransicoes() {
-    Semaforo s;
-    inicializar(&s);
-
-    avancar(&s);
-    assert(s.estado == VERDE);
-
-    avancar(&s);
-    assert(s.estado == AMARELO);
-
-    avancar(&s);
-    assert(s.estado == VERMELHO);
-
-    printf("Teste de transicoes: OK\n");
-}
-
-void testarCicloCompleto() {
-    Semaforo s;
-    inicializar(&s);
-
-    for (int i = 0; i < 3; i++) {
-        avancar(&s);
-    }
-
-    assert(s.estado == VERMELHO);
-    printf("Teste de ciclo completo: OK\n");
-}
+void inicializar(Semaforo *s);
+void atualizar(Semaforo *s, unsigned int segundos);
 
 int main() {
-    testarEstadoInicial();
-    testarTransicoes();
-    testarCicloCompleto();
+    Semaforo semaforo;
 
-    printf("\nTodos os testes passaram!\n");
+    // Teste 1: estado inicial.
+    inicializar(&semaforo);
+    assert(semaforo.estado == VERMELHO);
+    printf("Teste 1: Estado inicial - OK\n");
+
+    // Teste 2: transição do vermelho para verde.
+    atualizar(&semaforo, 29);
+    assert(semaforo.estado == VERMELHO);
+
+    atualizar(&semaforo, 1);
+    assert(semaforo.estado == VERDE);
+    printf("Teste 2: Vermelho para verde - OK\n");
+
+    // Teste 3: transição do verde para amarelo.
+    atualizar(&semaforo, 25);
+    assert(semaforo.estado == AMARELO);
+    printf("Teste 3: Verde para amarelo - OK\n");
+
+    // Teste 4: transição do amarelo para vermelho.
+    atualizar(&semaforo, 5);
+    assert(semaforo.estado == VERMELHO);
+    printf("Teste 4: Amarelo para vermelho - OK\n");
+
+    // Teste 5: ciclo completo de 60 segundos.
+    atualizar(&semaforo, 60);
+    assert(semaforo.estado == VERMELHO);
+    assert(semaforo.tempo_decorrido == 0);
+    printf("Teste 5: Ciclo completo - OK\n");
+
+    printf("\nTodos os testes foram aprovados!\n");
 
     return 0;
 }
