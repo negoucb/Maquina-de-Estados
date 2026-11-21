@@ -1,16 +1,19 @@
 
 #include <stdio.h>
 
+// Definição dos estados do semáforo.
 typedef enum Estado {
     VERMELHO,
     VERDE,
     AMARELO
 } Estado;
 
+// Estrutura que armazena o estado e o tempo decorrido.
 typedef struct Semaforo {
     Estado estado;
     unsigned int tempo_decorrido;
 } Semaforo;
+
 // Retorna a duração de cada estado.
 unsigned int obterTempoEstado(Estado estado) {
     switch (estado) {
@@ -77,3 +80,4 @@ void atualizar(Semaforo *s, unsigned int segundos) {
         avancar(s);
     }
 }
+
